@@ -7,7 +7,9 @@ module.exports = {
       return res.status(200).send({ users });
     } catch (err) {
       console.log(err);
-      return res.status(err.status || 500).message(err.message || "Something went wrong...");
+      return res
+        .status(err.status || 500)
+        .message(err.message || "Something went wrong...");
     }
-  }
+  },
 };
