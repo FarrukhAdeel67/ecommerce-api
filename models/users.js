@@ -13,19 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    email: {
+    phone_number: {
       type: DataTypes.STRING,
       allowNull: true,
-    },
-    status: {
-      type: DataTypes.ENUM("Pending", "Approved", "Rejected"),
-      allowNull: false,
-      defaultValue: "Pending",
-    },
-    archived: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
     },
     createdAt: {
       allowNull: false,
