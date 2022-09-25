@@ -1,6 +1,48 @@
-const { Users } = require("../models");
+const { random } = require("lodash");
+const { Users, sequelize, UserOtps } = require("../models");
 
 module.exports = {
+  signUp: async (req, res) => {
+    const transaction = await sequelize.transaction();
+    try {
+      const { name, phoneNumber } = req.body;
+      if (!name || !phoneNumber) {
+        throw { status: 400, message: "Required fields cannot be empty" };
+      }
+      const phoneNumberFound = await Users.findOne({
+        where: {
+          phone_number: phoneNumber,
+        },
+        transaction,
+      });
+      if (phoneNumberFound) {
+        throw { status: 409, message: "Phone Number already exists" };
+      }
+      let user = await Users.create(
+        {
+          name,
+          phone_number: phoneNumber,
+        },
+        { transaction }
+      );
+      const otp = Math.floor(Math.random() * 1000000);
+      const userOtp = await UserOtps.create(
+        {
+          otp,
+          fk_user_id: user.id,
+        },
+        { transaction }
+      );
+      await transaction.commit();
+      res.status(200).send({ user, userOtp });
+    } catch (err) {
+      console.log(err);
+      await transaction.rollBack();
+      return res
+        .status(err.status || 500)
+        .message(err.message || "Something went wrong");
+    }
+  },
   get: async (req, res) => {
     try {
       const users = await Users.findAll();

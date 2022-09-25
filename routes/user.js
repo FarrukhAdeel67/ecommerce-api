@@ -4,6 +4,6 @@ const router = Router();
 // Controllers
 const controller = require("../controllers/user");
 
-router.use("/users", controller.get);
+router.use("/", controller.signUp);
 
 module.exports = router;
