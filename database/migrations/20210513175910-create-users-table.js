@@ -15,19 +15,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      email: {
+      phone_number: {
         type: Sequelize.STRING,
         allowNull: true,
-      },
-      status: {
-        type: Sequelize.ENUM("Pending", "Approved", "Rejected"),
-        allowNull: false,
-        defaultValue: "Pending",
-      },
-      archived: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
       },
       createdAt: {
         allowNull: false,
