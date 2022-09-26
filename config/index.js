@@ -21,6 +21,12 @@ var config = convict({
     env: "PORT",
     arg: "port",
   },
+  jwt_secret: {
+    doc: "JWT secret key",
+    format: String,
+    default: "",
+    env: "JWT_SECRET",
+  },
   db: {
     host: {
       doc: "Database host name/IP",
