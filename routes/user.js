@@ -9,4 +9,5 @@ router.post("/", controller.signUp);
 router.put("/:userId", controller.update);
 router.put("/:userId/verifyOtp", isUser, controller.verifyOtp);
 
+
 module.exports = router;
