@@ -1,6 +1,6 @@
 
 const { random, indexOf } = require("lodash");
-const { Users, sequelize, UserOtps } = require("../models");
+const { Users, sequelize, UserOtps, UserShops } = require("../models");
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const config = require("../config");
@@ -98,18 +98,14 @@ module.exports = {
   update: async (req, res) => {
     const transaction = await sequelize.transaction();
     try {
+      const { user } = req;
       const { name } = req.body;
-      const { userId } = req.params;
-      const user = await Users.findByPk(userId);
-      if (!user) {
-        throw { status: 409, message: "User doesn't exist" };
-      }
-      let updatedUser = await Users.update(
+      const updatedUser = await Users.update(
         {
           name: name ? name : user.name,
         },
         {
-          where: { id: userId },
+          where: { id: user.id },
         },
 
         { transaction }
@@ -126,4 +122,28 @@ module.exports = {
         .message(err.message || "Something went wrong...");
     }
   },
+  shop: async (req, res) => {
+    const transaction = await sequelize.transaction();
+    try {
+      const { user } = req;
+      const { shop_name } = req.body;
+      const createShop = await UserShops.create(
+        {
+          shopkeeper_name: user.name,
+          shop_name: shop_name,
+          fk_user_id: user.id,
+        },
+        { transaction },
+      );
+      console.log("Hellow");
+      res.status(200).send({ createShop });
+      await transaction.commit();
+    } catch (err) {
+      console.log(err);
+      await transaction.rollBack();
+      res
+        .status(err.status || 500)
+        .message(err.message || "Something went wrong...");
+    }
+  }
 };
