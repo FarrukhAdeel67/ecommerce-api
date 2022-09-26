@@ -4,6 +4,7 @@ const router = Router();
 // Controllers
 const controller = require("../controllers/user");
 
-router.use("/", controller.signUp);
+router.post("/", controller.signUp);
+router.put("/:userId", controller.update);
 
 module.exports = router;
