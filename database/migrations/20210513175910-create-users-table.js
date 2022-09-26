@@ -19,6 +19,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
+      phone_number_verified: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.INTEGER,
