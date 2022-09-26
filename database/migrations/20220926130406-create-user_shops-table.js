@@ -2,27 +2,23 @@
 
 const { DataTypes } = require("sequelize");
 module.exports = {
-  up: async (queryInterface) => {
-    await queryInterface.createTable("user_otps", {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable("user_shops", {
       id: {
         type: DataTypes.INTEGER,
+        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+      },
+      shopkeeper_name: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
-      otp: {
-        type: DataTypes.INTEGER,
+      shop_name: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       fk_user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "users",
-          key: "id",
-        },
-      },
-      expiry: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
@@ -36,8 +32,7 @@ module.exports = {
       },
     });
   },
-
-  down: async (queryInterface) => {
-    await queryInterface.dropTable("user_otps");
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable("user_shops");
   },
 };
