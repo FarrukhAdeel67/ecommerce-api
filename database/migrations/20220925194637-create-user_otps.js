@@ -37,7 +37,7 @@ module.exports = {
     });
   },
 
-  down:async (queryInterface) => {
-     await queryInterface.dropTable('user_otps')
+  down: async (queryInterface) => {
+    await queryInterface.dropTable("user_otps");
   },
 };

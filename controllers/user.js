@@ -1,6 +1,10 @@
-
-const { random, indexOf } = require("lodash");
-const { Users, sequelize, UserOtps, UserShops } = require("../models");
+const {
+  Users,
+  sequelize,
+  UserOtps,
+  Products,
+  UserShops,
+} = require("../models");
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const config = require("../config");
@@ -126,6 +130,7 @@ module.exports = {
     const transaction = await sequelize.transaction();
     try {
       const { user } = req;
+      console.log(user.name);
       const { shop_name } = req.body;
       const createShop = await UserShops.create(
         {
@@ -133,11 +138,10 @@ module.exports = {
           shop_name: shop_name,
           fk_user_id: user.id,
         },
-        { transaction },
+        { transaction }
       );
-      console.log("Hellow");
-      res.status(200).send({ createShop });
       await transaction.commit();
+      res.status(200).send({ createShop });
     } catch (err) {
       console.log(err);
       await transaction.rollBack();
@@ -145,5 +149,5 @@ module.exports = {
         .status(err.status || 500)
         .message(err.message || "Something went wrong...");
     }
-  }
+  },
 };
