@@ -1,4 +1,4 @@
-const { random } = require("lodash");
+const { random, indexOf } = require("lodash");
 const { Users, sequelize, UserOtps } = require("../models");
 
 module.exports = {
@@ -54,4 +54,33 @@ module.exports = {
         .message(err.message || "Something went wrong...");
     }
   },
+  update: async (req, res) => {
+    const transaction = await sequelize.transaction();
+    try {
+      const { name } = req.body;
+      const { userId } = req.params;
+      const user = await Users.findByPk(userId);
+      if (!user) {
+        throw { status: 409, message: "User doesn't exist" };
+      }
+      let updatedUser = await Users.update(
+        {
+          name: name ? name : user.name,
+        }, {
+        where: { id: userId }
+      },
+        { transaction }
+      );
+      await transaction.commit();
+      res.status(200).send({
+        updatedUser,
+      });
+    } catch (err) {
+      console.log(err);
+      await transaction.rollback();
+      return res
+        .status(err.status || 500)
+        .message(err.message || "Something went wrong...");
+    }
+  }
 };
