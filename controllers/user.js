@@ -1,10 +1,6 @@
-const {
-  Users,
-  sequelize,
-  UserOtps,
-  Products,
-  UserShops,
-} = require("../models");
+
+const { random, indexOf } = require("lodash");
+const { Users, sequelize, UserOtps, UserShops } = require("../models");
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const config = require("../config");
@@ -130,15 +126,23 @@ module.exports = {
     const transaction = await sequelize.transaction();
     try {
       const { user } = req;
-      console.log(user.name);
       const { shop_name } = req.body;
+      const shopNameFound = await UserShops.findOne({
+        where: {
+          shop_name: shop_name,
+        },
+        transaction,
+      });
+      if (shopNameFound) {
+        throw { status: 409, message: "Shop Name already exists. Please give it some other name" };
+      }
       const createShop = await UserShops.create(
         {
           shopkeeper_name: user.name,
           shop_name: shop_name,
           fk_user_id: user.id,
         },
-        { transaction }
+        { transaction },
       );
       await transaction.commit();
       res.status(200).send({ createShop });
@@ -149,5 +153,5 @@ module.exports = {
         .status(err.status || 500)
         .message(err.message || "Something went wrong...");
     }
-  },
+  }
 };
