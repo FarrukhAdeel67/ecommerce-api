@@ -1,4 +1,3 @@
-
 const { random, indexOf } = require("lodash");
 const { Users, sequelize, UserOtps, UserShops } = require("../models");
 const moment = require("moment");
@@ -134,7 +133,10 @@ module.exports = {
         transaction,
       });
       if (shopNameFound) {
-        throw { status: 409, message: "Shop Name already exists. Please give it some other name" };
+        throw {
+          status: 409,
+          message: "Shop Name already exists. Please give it some other name",
+        };
       }
       const createShop = await UserShops.create(
         {
@@ -142,7 +144,7 @@ module.exports = {
           shop_name: shop_name,
           fk_user_id: user.id,
         },
-        { transaction },
+        { transaction }
       );
       await transaction.commit();
       res.status(200).send({ createShop });
@@ -153,5 +155,24 @@ module.exports = {
         .status(err.status || 500)
         .message(err.message || "Something went wrong...");
     }
-  }
+  },
+  getShop: async (req, res) => {
+    const transaction = await sequelize.transaction();
+    try {
+      let { user } = req;
+      const shopFound = await UserShops.findAll({
+        where: {
+          fk_user_id: user.id,
+        },
+      });
+      await transaction.commit();
+      res.status(200).send({ shopFound });
+    } catch (err) {
+      console.log(err);
+      await transaction.rollBack();
+      return res
+        .status(err.status || 500)
+        .send(err.message || "something went wrong....");
+    }
+  },
 };
