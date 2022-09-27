@@ -10,6 +10,6 @@ router.post("/", controller.signUp);
 router.put("/:userId", isUser, controller.update);
 router.put("/:userId/verifyOtp", isUser, controller.verifyOtp);
 router.post("/:userId/shops", isUser, controller.shop);
-router.get("/:userId/shops/:shopId", isUser, isShop, controller.getShop);
+router.get("/:userId/shops/:shopId", isUser, controller.getShop);
 
 module.exports = router;
