@@ -160,11 +160,21 @@ module.exports = {
     const transaction = await sequelize.transaction();
     try {
       let { user } = req;
-      const shopFound = await UserShops.findAll({
+      const { shopId } = req.params;
+      const shop = await UserShops.findByPk(shopId);
+      if (!shop) {
+        throw { status: 409, message: "Shop Id doesn't exist." };
+      }
+      const shopFound = await UserShops.findOne({
         where: {
           fk_user_id: user.id,
+          id: shopId,
         },
+        transaction,
       });
+      if (!shopFound) {
+        throw { status: 409, message: "Shop does not exist." };
+      }
       await transaction.commit();
       res.status(200).send({ shopFound });
     } catch (err) {
