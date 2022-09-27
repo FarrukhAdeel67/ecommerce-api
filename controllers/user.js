@@ -156,4 +156,29 @@ module.exports = {
         .message(err.message || "Something went wrong...");
     }
   },
+  getShop: async (req, res) => {
+    const transaction = await sequelize.transaction();
+    try {
+      let { user } = req;
+      const { shopId } = req.params;
+      const shopFound = await UserShops.findOne({
+        where: {
+          fk_user_id: user.id,
+          id: shopId,
+        },
+        transaction,
+      });
+      if (!shopFound) {
+        throw { status: 409, message: "Shop does not exist." };
+      }
+      await transaction.commit();
+      res.status(200).send({ shopFound });
+    } catch (err) {
+      console.log(err);
+      await transaction.rollBack();
+      return res
+        .status(err.status || 500)
+        .send(err.message || "something went wrong....");
+    }
+  },
 };
