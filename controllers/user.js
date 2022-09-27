@@ -161,10 +161,6 @@ module.exports = {
     try {
       let { user } = req;
       const { shopId } = req.params;
-      const shop = await UserShops.findByPk(shopId);
-      if (!shop) {
-        throw { status: 409, message: "Shop Id doesn't exist." };
-      }
       const shopFound = await UserShops.findOne({
         where: {
           fk_user_id: user.id,
