@@ -1,4 +1,3 @@
-const { random, indexOf } = require("lodash");
 const { Users, sequelize, UserOtps } = require("../models");
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
