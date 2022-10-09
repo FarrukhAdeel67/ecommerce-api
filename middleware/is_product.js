@@ -1,8 +1,8 @@
 const { Products } = require("../models");
 module.exports = async (req, res, next) => {
-  const { productId } = req.params;
+  const { fk_product_id } = req.body;
   try {
-    const product = await Products.findByPk(productId);
+    const product = await Products.findByPk(fk_product_id);
     if (!product) {
       throw { error: 500, message: "Products does not exist..." };
     }
